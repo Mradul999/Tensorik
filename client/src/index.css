@@ -1,0 +1,48 @@
+@import "tailwindcss";
+.card-with-animated-line .top-glow-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  overflow: hidden;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  opacity: 0;
+  background-color: transparent;
+  transition: opacity 0.3s ease;
+}
+
+.card-with-animated-line .top-glow-line::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #42a5f5 50%,
+    transparent 100%
+  );
+  animation: glow-line-move 1.5s infinite linear;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 6px #42a5f5);
+}
+
+@keyframes glow-line-move {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+.card-with-animated-line:hover .top-glow-line {
+  opacity: 1;
+}
+
+.card-with-animated-line:hover {
+  box-shadow: 0 0 20px rgba(66, 165, 245, 0.4), 0 0 30px rgba(66, 165, 245, 0.3),
+    0 0 50px rgba(66, 165, 245, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
