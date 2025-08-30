@@ -37,23 +37,36 @@ const Dashboard = () => {
   }, []);
 
   const handleUpload = async () => {
-    if (!profilePic) return alert("Please enter a URL for the image");
+    if (!profilePic) return alert("Please select an image");
+
+    if (profilePic.size > 10 * 1024 * 1024) {
+      return alert("File size should be less than 10MB");
+    }
+
+    const formData = new FormData();
+    formData.append("file", profilePic);
+    formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_PRESET);
 
     try {
-      const res = await fetch("http://localhost:5000/upload-profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user.email, profilePic }),
-      });
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${
+          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+        }/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const data = await res.json();
-      if (res.ok) {
-        const updatedUser = { ...user, profilePic };
+      if (data.secure_url) {
+        const updatedUser = { ...user, profilePic: data.secure_url };
         setUser(updatedUser);
         localStorage.setItem("user", JSON.stringify(updatedUser));
         alert("✅ Profile picture updated!");
+        setProfilePic(null);
       } else {
-        alert(data.msg || "Upload failed");
+        alert("Upload failed");
       }
     } catch (err) {
       alert("Server error");
@@ -158,10 +171,9 @@ const Dashboard = () => {
 
           <div className="mt-4">
             <input
-              type="text"
-              value={profilePic}
-              onChange={(e) => setProfilePic(e.target.value)}
-              placeholder="Paste new profile pic URL"
+              type="file"
+              accept="image/*"
+              onChange={(e) => setProfilePic(e.target.files[0])}
               className="w-full p-2 bg-[#0f172a] border border-gray-600 rounded text-sm"
             />
             <button
