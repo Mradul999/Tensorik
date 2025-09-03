@@ -1,12 +1,12 @@
 // src/Login.jsx
-import React, { useEffect, useState } from 'react';
-import * as THREE from 'three';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import * as THREE from "three";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/Tensorik logo.png";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ const Login = () => {
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      const container = document.getElementById('particle-container');
+      const container = document.getElementById("particle-container");
       if (container && !container.hasChildNodes()) {
         container.appendChild(renderer.domElement);
       }
@@ -38,7 +38,10 @@ const Login = () => {
         positions[i + 1] = (Math.random() - 0.5) * 10;
         positions[i + 2] = (Math.random() - 0.5) * 10;
       }
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(positions, 3)
+      );
 
       particleMaterial = new THREE.PointsMaterial({
         color: 0x3b82f6,
@@ -51,7 +54,7 @@ const Login = () => {
       particles = new THREE.Points(geometry, particleMaterial);
       scene.add(particles);
 
-      window.addEventListener('resize', onWindowResize);
+      window.addEventListener("resize", onWindowResize);
       animateParticles();
     }
 
@@ -71,7 +74,7 @@ const Login = () => {
     initParticles();
 
     return () => {
-      window.removeEventListener('resize', onWindowResize);
+      window.removeEventListener("resize", onWindowResize);
     };
   }, []);
 
@@ -80,27 +83,27 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.msg || 'Invalid credentials');
+        alert(data.msg || "Invalid credentials");
         setLoading(false);
         return;
       }
 
-      alert('✅ Login successful');
-      console.log('Logged in user:', data.user);
-      navigate('/dashboard');
-
+      alert("✅ Login successful");
+      console.log("Logged in user:", data.user);
+      navigate("/dashboard");
     } catch (err) {
-      console.error('Login error:', err);
-      alert('❌ Server error, please try again later.');
+      console.error("Login error:", err);
+      alert("❌ Server error, please try again later.");
     } finally {
       setLoading(false);
     }
@@ -143,7 +146,7 @@ const Login = () => {
               <label htmlFor="password">Password</label>
             </div>
             <button type="submit" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
           <div className="footer">
@@ -263,42 +266,6 @@ const Login = () => {
 };
 
 export default Login;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // // src/Login.jsx
 // import React, { useEffect } from 'react';
@@ -505,6 +472,5 @@ export default Login;
 //     </>
 //   );
 // };
-
 
 // export default Login;

@@ -31,7 +31,7 @@ const VerifyOtp = () => {
         sessionStorage.removeItem("name");
         sessionStorage.removeItem("password");
 
-        navigate("/");
+        navigate("/login");
       } else {
         alert(data.msg);
       }
