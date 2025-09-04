@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import * as THREE from "three";
 import { Link, useNavigate } from "react-router-dom";
+
 import logo from "../assets/images/Tensorik logo.png";
 
 const Login = () => {
@@ -108,6 +109,10 @@ const Login = () => {
       setLoading(false);
     }
   };
+  const forgotPasswordHandler = async (e) => {
+    e.preventDefault();
+    navigate("/forgot-password");
+  };
 
   return (
     <>
@@ -145,6 +150,12 @@ const Login = () => {
               />
               <label htmlFor="password">Password</label>
             </div>
+            <span
+              className="text-sm cursor-pointer  text-blue-400 "
+              onClick={forgotPasswordHandler}
+            >
+              Fogot Password?
+            </span>
             <button type="submit" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </button>

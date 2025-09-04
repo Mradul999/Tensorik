@@ -23,7 +23,7 @@ const sendOtp = async (to, subject, otp) => {
           </div>
         </div>
       `,
-    };
+    };  
 
     await transporter.sendMail(mailOptions);
 

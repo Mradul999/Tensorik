@@ -12,6 +12,8 @@ const jwt = require("jsonwebtoken");
 const otpRoutes = require("./routes/routes.otp.js");
 const webinarRoutes = require("./routes/routes.webinar.js");
 
+const authRoutes = require("./routes/routes.auth.js");
+
 dotenv.config();
 
 const app = express();
@@ -199,6 +201,7 @@ app.post("/api/groq-chat", async (req, res) => {
 app.use("/otp", otpRoutes);
 
 app.use("/webinar", webinarRoutes);
+app.use("/password", authRoutes);
 
 // 🟢 Start Server
 app.listen(PORT, () => {

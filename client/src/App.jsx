@@ -27,6 +27,8 @@ import ScrollToTop from "./components/ScrollToTop";
 // ✅ Import ChatBot
 import ChatBot from "./components/ChatBot";
 import VerifyOtp from "./pages/VerifyOtp";
+import ForgetPassWord from "./pages/ForgetPassWord";
+import ResetPassword from "./pages/ResetPassword";
 
 // Refresh AOS on every route change
 const AOSRefreshOnRouteChange = () => {
@@ -68,6 +70,8 @@ function App() {
           <Route path="/dashboard/saved" element={<Saved />} />
 
           <Route path="/verify-otp" element={<VerifyOtp />}></Route>
+          <Route path="/forgot-password" element={<ForgetPassWord />}></Route>
+          <Route path="/reset-password/" element={<ResetPassword />}></Route>
         </Routes>
 
         {/* ✅ Global ChatBot that appears on all routes */}
