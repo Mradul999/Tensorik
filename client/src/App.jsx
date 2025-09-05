@@ -29,6 +29,7 @@ import ChatBot from "./components/ChatBot";
 import VerifyOtp from "./pages/VerifyOtp";
 import ForgetPassWord from "./pages/ForgetPassWord";
 import ResetPassword from "./pages/ResetPassword";
+import CoursePage from "./pages/Courses";
 
 // Refresh AOS on every route change
 const AOSRefreshOnRouteChange = () => {
@@ -59,6 +60,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/courses" element={<CoursePage />}></Route>
           <Route path="/coming-soon" element={<ComingSoon />} />
           <Route path="/workshop-register" element={<WorkshopRegistration />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />

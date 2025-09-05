@@ -5,11 +5,15 @@ import { Link, useNavigate } from "react-router-dom";
 
 import logo from "../assets/images/Tensorik logo.png";
 
+import useUserStore from "../zustand/store.js";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const { setUser } = useUserStore();
 
   useEffect(() => {
     let scene, camera, renderer, particles, particleMaterial;
@@ -100,6 +104,7 @@ const Login = () => {
       }
 
       alert("✅ Login successful");
+      setUser(data.user);
       console.log("Logged in user:", data.user);
       navigate("/dashboard");
     } catch (err) {

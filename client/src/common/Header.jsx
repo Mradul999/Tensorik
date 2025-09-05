@@ -1,24 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
+// src/components/Header.jsx
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import logo from "../assets/images/Tensorik logo.png";
-import Services from "../components/Services";
-
+import useUserStore from "../zustand/store.js";
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
+  const { user, clearUser } = useUserStore();
+
   const toggleMobileMenu = () => setMobileOpen(!mobileOpen);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) setLoggedInUser(user);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -31,8 +27,7 @@ const Header = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    setLoggedInUser(null);
+    clearUser();
     setDropdownOpen(false);
     navigate("/login");
   };
@@ -42,7 +37,6 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-40 px-4 md:px-10 bg-[#161b22] shadow-md border-b border-[#21262d]">
       <div className="max-w-7xl mx-auto flex justify-between items-center h-16 md:h-20 relative">
-
         {/* Logo */}
         <Link to="/" className="flex items-center z-50">
           <img
@@ -57,7 +51,7 @@ const Header = () => {
           {navItems.map((item) => (
             <Link
               key={item}
-              to="/coming-soon"
+              to={item === "Courses" ? "/courses" : "/coming-soon"}
               className="text-gray-400 hover:text-white transition-colors duration-200"
             >
               {item}
@@ -67,26 +61,24 @@ const Header = () => {
 
         {/* Desktop Right */}
         <div className="hidden md:flex items-center space-x-4 relative">
-          {loggedInUser ? (
+          {user ? (
             <div className="flex items-center gap-3 relative" ref={dropdownRef}>
-              {/* 🔔 Notification Icon */}
               <button className="text-gray-400 hover:text-white relative">
                 🔔
               </button>
-
-              {/* 👤 Profile Image */}
               <button onClick={toggleDropdown}>
                 <img
-                  src={loggedInUser.profilePic || "https://i.imgur.com/4ZQZ4Z0.png"}
+                  src={user.profilePic || "https://i.imgur.com/4ZQZ4Z0.png"}
                   alt="Profile"
                   className="w-9 h-9 rounded-full object-cover border border-gray-500 hover:ring-2 ring-blue-400 transition"
                 />
               </button>
 
-              {/* 🔽 Animated Dropdown */}
               <div
                 className={`absolute right-0 top-12 w-44 bg-[#1f2937] rounded-md shadow-xl transition-all duration-200 ease-in-out origin-top-right transform ${
-                  dropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
+                  dropdownOpen
+                    ? "scale-100 opacity-100"
+                    : "scale-95 opacity-0 pointer-events-none"
                 }`}
               >
                 <Link
@@ -113,7 +105,7 @@ const Header = () => {
                 Signup
               </Link>
               <Link
-                to="/coming-soon"
+                to="/login"
                 className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1 px-4 rounded-full transition duration-300 shadow-md text-sm"
               >
                 Get Started
@@ -124,18 +116,22 @@ const Header = () => {
 
         {/* Mobile Buttons */}
         <div className="flex items-center md:hidden space-x-3 z-50">
-          <Link
-            to="/Signup"
-            className="border border-blue-500 text-blue-400 hover:bg-blue-600 hover:text-white font-medium py-1 px-3 rounded-full transition duration-300 text-sm"
-          >
-            Signup
-          </Link>
-          <Link
-            to="/coming-soon"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1 px-3 rounded-full transition duration-300 shadow-md text-sm"
-          >
-            Get Started
-          </Link>
+          {!user && (
+            <>
+              <Link
+                to="/Signup"
+                className="border border-blue-500 text-blue-400 hover:bg-blue-600 hover:text-white font-medium py-1 px-3 rounded-full transition duration-300 text-sm"
+              >
+                Signup
+              </Link>
+              <Link
+                to="/login"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1 px-3 rounded-full transition duration-300 shadow-md text-sm"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
           <button
             className="text-gray-400 hover:text-white transition"
             onClick={toggleMobileMenu}
@@ -154,7 +150,7 @@ const Header = () => {
             {navItems.map((item) => (
               <Link
                 key={item}
-                to="/coming-soon"
+                to={item === "Courses" ? "/courses" : "/coming-soon"}
                 className="text-gray-400 hover:text-white text-lg"
                 onClick={() => setMobileOpen(false)}
               >
@@ -162,22 +158,24 @@ const Header = () => {
               </Link>
             ))}
           </nav>
-          <div className="mt-auto flex flex-col space-y-4">
-            <Link
-              to="/Signup"
-              className="border border-blue-500 text-blue-400 hover:bg-blue-600 hover:text-white font-medium py-2 px-4 rounded-full transition duration-300 text-center"
-              onClick={() => setMobileOpen(false)}
-            >
-              Signup
-            </Link>
-            <Link
-              to="/coming-soon"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-full transition duration-300 shadow-md text-center"
-              onClick={() => setMobileOpen(false)}
-            >
-              Get Started
-            </Link>
-          </div>
+          {!user && (
+            <div className="mt-auto flex flex-col space-y-4">
+              <Link
+                to="/Signup"
+                className="border border-blue-500 text-blue-400 hover:bg-blue-600 hover:text-white font-medium py-2 px-4 rounded-full transition duration-300 text-center"
+                onClick={() => setMobileOpen(false)}
+              >
+                Signup
+              </Link>
+              <Link
+                to="/login"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-full transition duration-300 shadow-md text-center"
+                onClick={() => setMobileOpen(false)}
+              >
+                Get Started
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </header>

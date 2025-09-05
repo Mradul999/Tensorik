@@ -14,6 +14,8 @@ const webinarRoutes = require("./routes/routes.webinar.js");
 
 const authRoutes = require("./routes/routes.auth.js");
 
+const userRoutes = require("./routes/routes.user.js");
+
 dotenv.config();
 
 const app = express();
@@ -202,6 +204,8 @@ app.use("/otp", otpRoutes);
 
 app.use("/webinar", webinarRoutes);
 app.use("/password", authRoutes);
+
+app.use("/profile",userRoutes)
 
 // 🟢 Start Server
 app.listen(PORT, () => {

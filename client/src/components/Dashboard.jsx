@@ -1,44 +1,35 @@
 // src/components/Dashboard.jsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import logo from "../assets/images/Tensorik logo.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useUserStore from "../zustand/store.js";
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
-  const [profilePic, setProfilePic] = useState("");
+  const { user, setUser, clearUser } = useUserStore();
+  const [profilePic, setProfilePic] = useState(null);
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef();
 
-  useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      setUser(JSON.parse(stored));
-    } else {
-      const fallback = {
-        name: "Akshai Naidu",
-        email: "akshaimaripi449@gmail.com",
-        profilePic: "https://i.imgur.com/4ZQZ4Z0.png",
-      };
-      setUser(fallback);
-      localStorage.setItem("user", JSON.stringify(fallback));
-    }
+  const navigate = useNavigate();
 
+  console.log("user from zustand", user);
+
+  useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleUpload = async () => {
     if (!profilePic) return alert("Please select an image");
-
     if (profilePic.size > 10 * 1024 * 1024) {
       return alert("File size should be less than 10MB");
     }
@@ -60,11 +51,31 @@ const Dashboard = () => {
 
       const data = await res.json();
       if (data.secure_url) {
-        const updatedUser = { ...user, profilePic: data.secure_url };
-        setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        alert("✅ Profile picture updated!");
-        setProfilePic(null);
+        try {
+          const res = await fetch(
+            "http://localhost:5000/profile/update-profile-pic",
+            {
+              method: "POST",
+              headers: { "Content-type": "application/json" },
+              body: JSON.stringify({
+                email: user.email,
+                profilePic: data.secure_url,
+              }),
+            }
+          );
+          const profileUpdateRes = await res.json();
+
+          if (res.ok) {
+            const updatedUser = { ...user, profilePic: data.secure_url };
+            setUser(updatedUser);
+            alert(profileUpdateRes.msg);
+            setProfilePic(null);
+          } else {
+            alert(profileUpdateRes.msg);
+          }
+        } catch (error) {
+          alert("error occurred");
+        }
       } else {
         alert("Upload failed");
       }
@@ -75,27 +86,27 @@ const Dashboard = () => {
 
   const handleEdit = async () => {
     try {
+      const updatedName = newName.trim() || user.name;
+      const updatedEmail = newEmail.trim() || user.email;
+
       const res = await fetch("http://localhost:5000/edit-profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           oldEmail: user.email,
-          newName,
-          newEmail,
+          newName: updatedName,
+          newEmail: updatedEmail,
         }),
       });
 
       const data = await res.json();
       if (res.ok) {
-        const updatedUser = {
-          ...user,
-          name: newName,
-          email: newEmail,
-        };
+        const updatedUser = { ...user, name: updatedName, email: updatedEmail };
         setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
         alert("✅ Profile updated!");
         setEditing(false);
+        setNewName("");
+        setNewEmail("");
       } else {
         alert(data.msg || "Error");
       }
@@ -105,15 +116,14 @@ const Dashboard = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    window.location.href = "/";
+    clearUser();
+    navigate("/login");
   };
 
-  if (!user) return <div className="p-6 text-white">Loading...</div>;
+  if (!user) return <div className="p-6 text-black">Loading...</div>;
 
   return (
     <div className="bg-[#0f172a] min-h-screen text-white">
-      {/* Top Navbar */}
       <div className="flex justify-between items-center p-4 border-b border-gray-700">
         <Link to="/" className="flex items-center z-50">
           <img
@@ -124,7 +134,7 @@ const Dashboard = () => {
         </Link>
         <div className="relative" ref={dropdownRef}>
           <img
-            src={user.profilePic}
+            src={user.profilePic || "https://i.imgur.com/4ZQZ4Z0.png"}
             alt="Profile"
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="w-10 h-10 rounded-full cursor-pointer"
@@ -154,12 +164,11 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-xl mx-auto p-6">
         <div className="bg-[#1e293b] rounded-xl p-6">
           <div className="flex items-center gap-4">
             <img
-              src={user.profilePic}
+              src={user.profilePic || "https://i.imgur.com/4ZQZ4Z0.png"}
               className="w-16 h-16 rounded-full border-2 border-blue-500"
               alt="Profile"
             />
@@ -184,7 +193,6 @@ const Dashboard = () => {
             </button>
           </div>
 
-          {/* Edit Section */}
           {editing && (
             <div className="mt-6 space-y-2">
               <input
