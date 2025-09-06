@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   FaArrowRight,
   FaCalendarAlt,
@@ -7,18 +7,20 @@ import {
   FaRobot,
   FaCheckCircle,
   FaTrophy,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 const Hero = () => {
   useEffect(() => {
-    const container = document.getElementById('neural-network');
+    const container = document.getElementById("neural-network");
     if (container && container.children.length === 0) {
       for (let i = 0; i < 25; i++) {
-        const neuron = document.createElement('div');
-        neuron.className = 'neuron';
+        const neuron = document.createElement("div");
+        neuron.className = "neuron";
         neuron.style.left = `${Math.random() * 100}%`;
         neuron.style.top = `${Math.random() * 100}%`;
-        neuron.style.width = neuron.style.height = `${5 + Math.random() * 15}px`;
+        neuron.style.width = neuron.style.height = `${
+          5 + Math.random() * 15
+        }px`;
         neuron.style.animationDelay = `${Math.random() * 2}s`;
         container.appendChild(neuron);
       }
@@ -122,8 +124,21 @@ const Hero = () => {
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <svg className="w-full h-full opacity-5 animate-spin-slow">
           <defs>
-            <pattern id="matrix" width="40" height="40" patternUnits="userSpaceOnUse">
-              <text x="0" y="20" fill="#58a6ff" fontSize="20" fontFamily="monospace">01</text>
+            <pattern
+              id="matrix"
+              width="40"
+              height="40"
+              patternUnits="userSpaceOnUse"
+            >
+              <text
+                x="0"
+                y="20"
+                fill="#58a6ff"
+                fontSize="20"
+                fontFamily="monospace"
+              >
+                01
+              </text>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#matrix)" />
@@ -141,20 +156,27 @@ const Hero = () => {
         {/* LEFT TEXT */}
         <div className="text-center md:text-left md:w-1/2 mb-16 md:mb-0">
           <h1 className="text-5xl font-bold leading-tight mb-6">
-            Master{' '}
+            Master{" "}
             <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               AI
             </span>
             <br />
-            <span className="typewriter text-blue-400 font-extrabold text-5xl">Practically</span>
+            <span className="typewriter text-blue-400 font-extrabold text-5xl">
+              Practically
+            </span>
           </h1>
 
           <p className="text-xl text-gray-400 mb-10 max-w-lg mx-auto md:mx-0">
-            Tensorik offers hands-on courses, real-world projects, and a vibrant community to help you excel in Artificial Intelligence and land your dream job.
+            Tensorik offers hands-on courses, real-world projects, and a vibrant
+            community to help you excel in Artificial Intelligence and land your
+            dream job.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-            <Link to="/coming-soon" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-full shadow-md flex items-center justify-center space-x-2 transition">
+            <Link
+              to="/courses"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-full shadow-md flex items-center justify-center space-x-2 transition"
+            >
               <span>Explore Courses</span>
               <FaArrowRight />
             </Link>
@@ -170,9 +192,15 @@ const Hero = () => {
           <div className="mt-12 flex flex-wrap justify-center md:justify-start gap-6">
             <div className="flex items-center">
               <div className="flex -space-x-2">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">PS</div>
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center text-white font-bold">SK</div>
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-white font-bold">RP</div>
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">
+                  PS
+                </div>
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center text-white font-bold">
+                  SK
+                </div>
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-white font-bold">
+                  RP
+                </div>
               </div>
               <div className="ml-4 text-left">
                 <p className="text-lg font-semibold">1.5K+ Students</p>
@@ -202,8 +230,12 @@ const Hero = () => {
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mx-auto mb-6">
                   <FaRobot className="text-4xl text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-2">Tensorik AI Platform</h3>
-                <p className="text-gray-400">Interactive learning environment</p>
+                <h3 className="text-2xl font-bold mb-2">
+                  Tensorik AI Platform
+                </h3>
+                <p className="text-gray-400">
+                  Interactive learning environment
+                </p>
               </div>
               <div className="p-6 border-t border-gray-700">
                 <div className="flex justify-between mb-4">
@@ -219,7 +251,7 @@ const Hero = () => {
                 <div className="w-full bg-gray-700 rounded-full h-2.5">
                   <div
                     className="bg-gradient-to-r from-blue-400 to-blue-600 h-2.5 rounded-full"
-                    style={{ width: '78%' }}
+                    style={{ width: "78%" }}
                   ></div>
                 </div>
               </div>
@@ -250,7 +282,6 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

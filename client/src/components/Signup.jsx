@@ -181,10 +181,6 @@ const Signup = () => {
       alert("Something went wrong!");
     }
   };
-  const forgotPasswordHandler = async (e) => {
-    e.preventDefault();
-    navigate("/forgot-password");
-  };
 
   return (
     <>
@@ -225,12 +221,7 @@ const Signup = () => {
               />
               <label htmlFor="confirm-password">Confirm Password</label>
             </div>
-            <span
-              className="text-sm cursor-pointer  text-blue-400 "
-              onClick={forgotPasswordHandler}
-            >
-              Fogot Password?
-            </span>
+
             <button type="submit">Sign Up</button>
           </form>
           <div className="footer">
